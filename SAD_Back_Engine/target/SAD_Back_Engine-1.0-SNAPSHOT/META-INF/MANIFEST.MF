@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: SAD_Back_Engine
+Implementation-Version: 1.0-SNAPSHOT
+Implementation-Vendor-Id: com.SE0865
+Build-Jdk: 1.7.0_79
+Built-By: AnLTNM-SE60906
+Specification-Title: SAD_Back_Engine
+Created-By: Apache Maven 3.3.3
+Specification-Version: 1.0-SNAPSHOT
+
