@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+    <definition name="login">
+        <put-attribute name="body" value="/WEB-INF/pages/login.jsp"/>
+    </definition>
+
+    <definition name="listFood" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/listFood.jsp"/>
+    </definition>
+
+    <definition name="foodDetail" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/foodDetail.jsp"/>
+    </definition>
+
+    <definition name="listOrder" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/listOrder.jsp"/>
+    </definition>
+
+    <definition name="orderDetail" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/orderDetail.jsp"/>
+    </definition>
+
+    <definition name="dashBoard" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/dashBoard.jsp"/>
+    </definition>
+
+    <definition name="message" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/message.jsp"/>
+    </definition>
+
+    <definition name="listCategory" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/listCategory.jsp"/>
+    </definition>
+
+    <definition name="categoryDetail" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/categoryDetail.jsp"/>
+    </definition>
+
+    <definition name="listExtraGroup" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/listExtraFoodGroup.jsp"/>
+    </definition>
+
+    <definition name="extraFoodGroupDetail" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/extraFoodGroupDetail.jsp"/>
+    </definition>
+
+    <definition name="listExtraFood" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/listExtraFood.jsp"/>
+    </definition>
+
+    <definition name="extraFoodDetail" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/extraFoodDetail.jsp"/>
+    </definition>
+
+    <definition name="tableDetail" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/tableDetail.jsp"/>
+    </definition>
+
+    <definition name="listUser" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/listUser.jsp"/>
+    </definition>
+
+    <definition name="userDetail" extends="DefaultTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/userDetail.jsp"/>
+    </definition>
+
+    <definition name="Floor-2" extends="BlankTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/Floor-2.jsp"/>
+    </definition>
+
+    <definition name="Floor-1" extends="BlankTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/Floor-1.jsp"/>
+    </definition>
+
+    <definition name="loginPage" extends="BlankTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/login.jsp"/>
+    </definition>
+
+    <definition name="changePassPage" extends="BlankTemplate">
+        <put-attribute name="body" value="/WEB-INF/pages/changePassword.jsp"/>
+    </definition>
+
+</tiles-definitions>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <tx:annotation-driven proxy-target-class="true"/>
+    <tx:annotation-driven/>
+    <context:component-scan base-package="com.se0865.sad"/>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:app-config.properties</value>
+        </property>
+    </bean>
+
+    <bean id="dataSource"
+          class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+
+        <!-- Start load entity all entities class from DB -->
+        <property name="packagesToScan" value="com.se0865.sad.entities"/>
+        <!-- End load entity all entities class from DB -->
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+            </props>
+        </property>
+        <property name="annotatedPackages">
+            <list>
+                <value>com.se0865.sad.entities</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Activates annotation based transaction management -->
+    <!--<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">-->
+    <!--<property name="sessionFactory" ref="sessionFactory"/>-->
+    <!--</bean>-->
+
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+          p:sessionFactory-ref="sessionFactory">
+    </bean>
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+    <bean id="appConfig" name="AppConfig" class="com.se0865.sad.configuration.AppConfig"/>
+    <bean id="commonUtil" name="CommonUtil" class="com.se0865.sad.utils.CommonUtil"/>
+
+    <!--Entity start-->
+    <bean id="employee" class="com.se0865.sad.entities.Employee"/>
+    <bean id="sadTable" class="com.se0865.sad.entities.SadTable"/>
+    <bean id="category" class="com.se0865.sad.entities.Category"/>
+    <bean id="extraFoodDetail" class="com.se0865.sad.entities.ExtraFoodDetail"/>
+    <bean id="extraFoodGroup" class="com.se0865.sad.entities.ExtraFoodGroup"/>
+    <bean id="food" class="com.se0865.sad.entities.Food"/>
+    <bean id="order" class="com.se0865.sad.entities.Order"/>
+    <bean id="orderDetail" class="com.se0865.sad.entities.OrderDetail"/>
+    <bean id="trackUserOrder" class="com.se0865.sad.entities.TrackUserOrder"/>
+    <bean id="user" class="com.se0865.sad.entities.User"/>
+    <!--Entity end-->
+
+    <!--DAO class start-->
+
+    <bean id="abstractDAO" class="com.se0865.sad.dao.AbstractDAO" abstract="true">
+    </bean>
+
+    <bean id="orderDao" class="com.se0865.sad.dao.OrderDao" abstract="true"/>
+    <bean id="orderDaoImpl" name="OrderDao" class="com.se0865.sad.impl.OrderDaoImpl">
+    </bean>
+
+    <bean id="employeeDao" class="com.se0865.sad.dao.EmployeeDao" abstract="true"/>
+    <bean id="employeeDaoImpl" name="EmployeeDaoImpl" class="com.se0865.sad.impl.EmployeeDaoImpl">
+    </bean>
+
+    <bean id="tableDao" class="com.se0865.sad.dao.TableDao" abstract="true"/>
+    <bean id="tableDaoImpl" name="TableDaoImpl" class="com.se0865.sad.impl.TableDaoImpl">
+    </bean>
+
+    <bean id="foodDao" class="com.se0865.sad.dao.FoodDao" abstract="true"/>
+    <bean id="foodDaoImpl" name="FoodDaoImpl" class="com.se0865.sad.impl.FoodDaoImpl">
+    </bean>
+
+    <bean id="extraFoodDao" class="com.se0865.sad.dao.ExtraFoodDao" abstract="true"/>
+    <bean id="extraFoodDaoImpl" name="ExtraFoodDao" class="com.se0865.sad.impl.ExtraFoodDaoImpl">
+    </bean>
+
+    <bean id="userDao" class="com.se0865.sad.dao.UserDao" abstract="true"/>
+    <bean id="userDaoImpl" name="UserDao" class="com.se0865.sad.impl.UserDaoImpl">
+    </bean>
+
+    <bean id="categoryDao" class="com.se0865.sad.dao.CategoryDao" abstract="true"/>
+    <bean id="categoryDaoImpl" name="CategoryDao" class="com.se0865.sad.impl.CategoryDaoImpl">
+    </bean>
+
+    <bean id="extraFoodGroupDao" name="ExtraFoodGroupDao" class="com.se0865.sad.impl.ExtraFoodGroupDaoImpl">
+    </bean>
+
+    <bean id="orderDetailDao" name="OrderDetailDao" class="com.se0865.sad.impl.OrderDetailDaoImpl">
+    </bean>
+    <!--DAO class end-->
+
+    <!-- Service end-->
+
+    <bean id="tableServices" class="com.se0865.sad.services.table.TableServices"/>
+    <bean id="foodServices" class="com.se0865.sad.services.food.FoodServices"/>
+    <bean id="orderServices" class="com.se0865.sad.services.order.OrderServices"/>
+    <bean id="userServices" class="com.se0865.sad.services.authen.UserAccountServices"/>
+    <bean id="imageServices" class="com.se0865.sad.services.images.ImageServices"/>
+
+    <!-- Service start-->
+
+    <!-- Logic start -->
+
+    <bean id="employeeManager" class="com.se0865.sad.logic.EmployeeManager"/>
+    <bean id="tableManager" class="com.se0865.sad.logic.TableManager"/>
+    <bean id="foodManager" class="com.se0865.sad.logic.FoodManager"/>
+    <bean id="orderManager" class="com.se0865.sad.logic.OrderManager"/>
+    <bean id="userManager" class="com.se0865.sad.logic.UserManager"/>
+
+    <!-- Logic end -->
+
+    <!-- Dto-->
+    <bean id="orderDto" class="com.se0865.sad.dto.OrderDto"/>
+    <bean id="detailDto" class="com.se0865.sad.dto.ExtraFoodDetailDto"/>
+    <bean id="categoryDto" class="com.se0865.sad.dto.CategoryDto"/>
+    <bean id="extraFoodGroupDto" class="com.se0865.sad.dto.ExtraFoodGroupDto"/>
+    <bean id="foodDto" class="com.se0865.sad.dto.FoodDto"/>
+    <bean id="groupedExtraFood" class="com.se0865.sad.dto.GroupedExtraFood"/>
+    <bean id="orderDetailDto" class="com.se0865.sad.dto.OrderDetailDto"/>
+    <bean id="userDto" class="com.se0865.sad.dto.UserDto"/>
+
+    <!-- Response -->
+    <bean id="sadResponse" class="com.se0865.sad.response.SadResponse"/>
+
+</beans>

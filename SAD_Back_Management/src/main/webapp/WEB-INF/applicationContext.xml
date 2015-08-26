@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <tx:annotation-driven proxy-target-class="true"/>
+    <tx:annotation-driven/>
+    <context:annotation-config />
+    <context:component-scan base-package="com.se0865.sad.bom.controller"/>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:app-config.properties</value>
+        </property>
+    </bean>
+
+    <bean id="dataSource"
+          class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+
+        <!-- Start load entity all entities class from DB -->
+        <property name="packagesToScan" value="com.se0865.sad.entities"/>
+        <!-- End load entity all entities class from DB -->
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+            </props>
+        </property>
+        <property name="annotatedPackages">
+            <list>
+                <value>com.se0865.sad.entities</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+          p:sessionFactory-ref="sessionFactory">
+    </bean>
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+    <!--<bean id="viewResolver"-->
+    <!--class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+    <!--<property name="prefix">-->
+    <!--<value>/WEB-INF/pages/</value>-->
+    <!--</property>-->
+    <!--<property name="suffix">-->
+    <!--<value>.jsp</value>-->
+    <!--</property>-->
+    <!--</bean>-->
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"/>
+
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/layouts/layouts.xml</value>
+                <value>/WEB-INF/layouts/views.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <mvc:interceptors>
+        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="locale"/>
+        </bean>
+    </mvc:interceptors>
+
+    <bean id="localeResolver"
+          class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="en"/>
+        <property name="cookieName" value="myAppLocaleCookie"></property>
+        <property name="cookieMaxAge" value="3600"></property>
+    </bean>
+
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="WEB-INF/classes/messages"/>
+        <property name="fallbackToSystemLocale" value="false"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <!-- Upload file-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="50000000"/>
+    </bean>
+
+    <bean id="appConfig" name="AppConfig" class="com.se0865.sad.configuration.AppConfig"/>
+    <bean id="commonUtil" name="CommonUtil" class="com.se0865.sad.utils.CommonUtil"/>
+
+    <!--Entity-->
+    <bean id="employee" class="com.se0865.sad.entities.Employee"/>
+
+    <!--DAO class start-->
+
+    <bean id="abstractDAO" class="com.se0865.sad.dao.AbstractDAO" abstract="true">
+    </bean>
+
+    <bean id="orderDao" class="com.se0865.sad.dao.OrderDao" abstract="true"/>
+    <bean id="orderDaoImpl" name="OrderDao" class="com.se0865.sad.impl.OrderDaoImpl">
+    </bean>
+
+    <bean id="employeeDao" class="com.se0865.sad.dao.EmployeeDao" abstract="true"/>
+    <bean id="employeeDaoImpl" name="EmployeeDaoImpl" class="com.se0865.sad.impl.EmployeeDaoImpl"/>
+
+    <bean id="tableDao" class="com.se0865.sad.dao.TableDao" abstract="true"/>
+    <bean id="tableDaoImpl" name="TableDaoImpl" class="com.se0865.sad.impl.TableDaoImpl">
+    </bean>
+
+    <bean id="foodDao" class="com.se0865.sad.dao.FoodDao" abstract="true"/>
+    <bean id="foodDaoImpl" name="FoodDaoImpl" class="com.se0865.sad.impl.FoodDaoImpl">
+    </bean>
+
+    <bean id="extraFoodDao" class="com.se0865.sad.dao.ExtraFoodDao" abstract="true"/>
+    <bean id="extraFoodDaoImpl" name="ExtraFoodDao" class="com.se0865.sad.impl.ExtraFoodDaoImpl">
+    </bean>
+
+    <bean id="userDao" class="com.se0865.sad.dao.UserDao" abstract="true"/>
+    <bean id="userDaoImpl" name="UserDao" class="com.se0865.sad.impl.UserDaoImpl">
+    </bean>
+
+    <bean id="categoryDao" class="com.se0865.sad.dao.CategoryDao" abstract="true"/>
+    <bean id="categoryDaoImpl" name="CategoryDao" class="com.se0865.sad.impl.CategoryDaoImpl">
+    </bean>
+
+    <bean id="extraFoodGroupDao" name="ExtraFoodGroupDao" class="com.se0865.sad.impl.ExtraFoodGroupDaoImpl">
+    </bean>
+
+    <bean id="orderDetailDao" name="OrderDetailDao" class="com.se0865.sad.impl.OrderDetailDaoImpl">
+    </bean>
+
+    <!-- Controller-->
+    <bean id="dashboardController" name="DashboardController" class="com.se0865.sad.bom.controller.DashboardController"/>
+    <bean id="foodController" name="FoodController" class="com.se0865.sad.bom.controller.FoodController"/>
+    <bean id="imageController" name="ImageController" class="com.se0865.sad.bom.controller.ImageController"/>
+    <bean id="categoryController" name="CategoryController" class="com.se0865.sad.bom.controller.CategoryController"/>
+    <bean id="extraFoodController" name="ExtraFoodController" class="com.se0865.sad.bom.controller.ExtraFoodController"/>
+    <bean id="authenController" name="AuthenController" class="com.se0865.sad.bom.controller.AuthenController"/>
+    <bean id="userController" name="UserController" class="com.se0865.sad.bom.controller.UserController"/>
+
+    <!-- Service-->
+
+    <!-- Logic -->
+    <bean id="foodManager" name="FoodManager" class="com.se0865.sad.bom.logic.FoodManager"/>
+    <bean id="categoryManager" name="CategoryManager" class="com.se0865.sad.bom.logic.CategoryManager"/>
+    <bean id="extraFoodManager" name="ExtraFoodManager" class="com.se0865.sad.bom.logic.ExtraFoodManager"/>
+    <bean id="authenManager" name="AuthenManager" class="com.se0865.sad.bom.logic.AuthenManager"/>
+    <bean id="tableManager" name="TableManager" class="com.se0865.sad.bom.logic.TableManager"/>
+    <bean id="userManager" name="UserManager" class="com.se0865.sad.bom.logic.UserManager"/>
+
+    <!-- Dto-->
+    <bean id="orderDto" class="com.se0865.sad.dto.OrderDto"/>
+    <bean id="detailDto" class="com.se0865.sad.dto.ExtraFoodDetailDto"/>
+    <bean id="categoryDto" class="com.se0865.sad.dto.CategoryDto"/>
+    <bean id="extraFoodGroupDto" class="com.se0865.sad.dto.ExtraFoodGroupDto"/>
+    <bean id="foodDto" class="com.se0865.sad.dto.FoodDto"/>
+    <bean id="groupedExtraFood" class="com.se0865.sad.dto.GroupedExtraFood"/>
+    <bean id="orderDetailDto" class="com.se0865.sad.dto.OrderDetailDto"/>
+    <bean id="userDto" class="com.se0865.sad.dto.UserDto"/>
+
+
+</beans>
